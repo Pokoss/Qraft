@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cartImageCardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="6dp"
+            android:layout_margin="5dp">
+            <ImageView
+                android:id="@+id/cartImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/black"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/cartImageCardView"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/productNameCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:maxLines="1"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="15dp"/>
+
+            <TextView
+                android:id="@+id/productPriceCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textColor="@color/white"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="10dp"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:layout_below="@+id/productNameCart"/>
+
+            <TextView
+                android:id="@+id/productQuantityCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/productNameCart"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@id/productPriceCart"
+                android:maxLines="1"
+                android:text="Quantity"
+                android:layout_toStartOf="@+id/productTotalCart"
+                android:layout_marginStart="30dp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/productTotalCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/productNameCart"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentEnd="true"
+                android:maxLines="1"
+                android:text="Total"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

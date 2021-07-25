@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateAccountActivity"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:isScrollContainer="true">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/logoCreateAccountPageCardView"
+            app:cardCornerRadius="6dp"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_500">
+
+            <ImageView
+                android:id="@+id/logoCreateAccountPage"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/qraft1"/>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/createAccountName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/logoCreateAccountPageCardView"
+            android:layout_marginTop="15dp"
+            android:hint="   Name"
+            android:background="@drawable/input"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:drawableStart="@drawable/person"
+            app:drawableTint="@color/black"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/createAccountEmailInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createAccountName"
+            android:layout_marginTop="15dp"
+            android:hint="   Email"
+            android:background="@drawable/input"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:drawableStart="@drawable/email"
+            app:drawableTint="@color/black"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/createAccountPasswordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createAccountEmailInput"
+            android:layout_marginTop="15dp"
+            app:passwordToggleEnabled="true"
+            android:background="@drawable/input"
+            android:inputType="textPassword"
+            android:padding="11dp"
+            android:textColor="@color/black"
+            android:drawableStart="@drawable/password"
+            app:drawableTint="@color/black"
+            android:hint="   Password"
+            android:textColorHint="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/createAccountConfirmPasswordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createAccountPasswordInput"
+            android:layout_marginTop="15dp"
+            app:passwordToggleEnabled="true"
+            android:background="@drawable/input"
+            android:inputType="textPassword"
+            android:padding="11dp"
+            android:textColor="@color/black"
+            android:drawableStart="@drawable/password"
+            app:drawableTint="@color/black"
+            android:hint="   Confirm Password"
+            android:textColorHint="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/createAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/createAccountConfirmPasswordInput"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Create Account"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:background="@drawable/buttons"
+            android:textColor="@color/white"
+            android:layout_marginTop="15dp"/>
+
+
+    </RelativeLayout>
+
+</ScrollView>

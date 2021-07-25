@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "417328879208",
+    "project_id": "qraft-883ca",
+    "storage_bucket": "qraft-883ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417328879208:android:ab6c17529e08128cd94ddd",
+        "android_client_info": {
+          "package_name": "com.lehub.qraft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417328879208-kqvvu1c0539ichkoh82tioihjatnn7p6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lehub.qraft",
+            "certificate_hash": "47d6b48158cd4e4b8eb3b7000c922ea4a7c5269d"
+          }
+        },
+        {
+          "client_id": "417328879208-8l62vaj61hu92252dp0g0bhd540a3lhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3e5bhyoFr5kRPYANXLrDEjFNJeyQInqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417328879208-8l62vaj61hu92252dp0g0bhd540a3lhn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

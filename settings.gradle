@@ -1,0 +1,2 @@
+rootProject.name = "Qraft"
+include ':app'
