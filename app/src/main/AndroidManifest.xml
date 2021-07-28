@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Qraft"
         tools:replace="android:theme">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".DisplayCategoryActivity"></activity>
+        <activity android:name=".ConfirmOrderActivity" />
+        <activity android:name=".SearchActivity" />
         <activity android:name=".CartActivity" />
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".LoginActivity" />

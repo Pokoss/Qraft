@@ -1,10 +1,13 @@
 package com.lehub.qraft;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,8 +23,10 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,10 +42,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private TextView productDetailsName,productDetailsPrice,productDetailsDescription;
     private ImageView productDetailsImage, productDetailsImage1, productDetailsImage2;
-    private Button productDetailsAddToCart, productDetailsGoTOCart;
+    private Button productDetailsAddToCart, productDetailsGoToCart;
     private ElegantNumberButton productDetailsQuantity;
     private RecyclerView similarProductsRecyclerView;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private ProgressDialog loadingBar;
 
     String state = "Normal";
 
@@ -57,10 +63,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         pid = getIntent().getStringExtra("pid").toString();
         productName = getIntent().getStringExtra("productName").toString();
-        image = getIntent().getStringExtra("image").toString();
-        image1 = getIntent().getStringExtra("image1").toString();
-        image2 = getIntent().getStringExtra("image2").toString();
-        description = getIntent().getStringExtra("description").toString();
         price = getIntent().getStringExtra("price").toString();
         category = getIntent().getStringExtra("category").toString();
 
@@ -71,27 +73,103 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productDetailsImage1 = findViewById(R.id.productDetailsImage1);
         productDetailsImage2 = findViewById(R.id.productDetailsImage2);
         productDetailsAddToCart = findViewById(R.id.productDetailsAddToCart);
-        productDetailsGoTOCart = findViewById(R.id.productDetailsGoToCart);
+        productDetailsGoToCart = findViewById(R.id.productDetailsGoToCart);
         productDetailsQuantity = findViewById(R.id.productDetailsQuantity);
         similarProductsRecyclerView = findViewById(R.id.productDetailsRecyclerViewSimilarProducts);
 
+        productDetailsGoToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser user = mAuth.getCurrentUser();
+
+                if (user == null){
+
+                    CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProductDetailsActivity.this);
+                    builder.setTitle("Please Login to enable Cart");
+                    builder.setItems(sequence, (dialog, which) -> {
+
+                        if (which == 0){
+
+                            Intent intent = new Intent(ProductDetailsActivity.this,LoginActivity.class);
+                            startActivity(intent);
+
+                        }
+                        if (which == 1){
+
+                            dialog.dismiss();
+
+                        }
+
+                    });
+                    builder.create().show();
+                }
+                else {
+                    Intent intent = new Intent(ProductDetailsActivity.this,CartActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        loadingBar = new ProgressDialog(this);
+        loadingBar.setTitle("Loading "+productName + " details");
+        loadingBar.setMessage("Please Wait");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.setCancelable(false);
+        loadingBar.show();
+
+
         productDetailsName.setText(productName);
         productDetailsPrice.setText(price);
-        productDetailsDescription.setText(description);
-        Picasso.get().load(image).into(productDetailsImage);
-        Picasso.get().load(image1).into(productDetailsImage1);
-        Picasso.get().load(image2).into(productDetailsImage2);
+
+
 
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+
+        firestore.collection("Products").document(pid).get()
+                .addOnCompleteListener(task -> {
+
+                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                    if (task.isSuccessful()){
+                        String theDescription = documentSnapshot.getString("description");
+                        String theImage = documentSnapshot.getString("image");
+                        String theImage1 = documentSnapshot.getString("image1");
+                        String theImage2 = documentSnapshot.getString("image2");
+
+
+                        productDetailsDescription.setText(theDescription);
+                        Picasso.get().load(theImage).into(productDetailsImage);
+                        Picasso.get().load(theImage1).into(productDetailsImage1);
+                        Picasso.get().load(theImage2).into(productDetailsImage2);
+
+                        description = theDescription;
+                        image = theImage;
+                        image1 = theImage1;
+                        image2 = theImage2;
+
+                        loadingBar.dismiss();
+
+
+
+                    }
+                });
 
         layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         firestore = FirebaseFirestore.getInstance();
 
-        loadSimilarProductsToRecyclerView();
+        loadSimilarProductsToRecyclerView(category);
 
         productDetailsAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingBar = new ProgressDialog(ProductDetailsActivity.this);
+                loadingBar.setTitle("Adding "+productName + " to Cart");
+                loadingBar.setMessage("Please Wait");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
 
                 checkOrderState();
             }
@@ -116,6 +194,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                    if (snapshot.exists()) {
 
                        Toast.makeText(ProductDetailsActivity.this, "You have pending orders, please wait for it to be approved", Toast.LENGTH_SHORT).show();
+                       loadingBar.dismiss();
                    }
 
 
@@ -146,23 +225,35 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 hashMap.put("image", theImage);
                 hashMap.put("category", theCategory);
 
+
                 firestore.collection("Cart List").document("User View").collection(user).document(pid).set(hashMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
 
                                 Toast.makeText(ProductDetailsActivity.this, theName + " added to cart", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
 
                             }
-                        });
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
+                        Toast.makeText(ProductDetailsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
+
+                    }
+                });
             }
         });
 
 
     }
 
-    private void loadSimilarProductsToRecyclerView() {
+    private void loadSimilarProductsToRecyclerView(String category) {
+
+        firestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         Query query = firestore.collection("Products");
 
@@ -180,6 +271,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 holder.productPrice.setText("UGX " + model.getPrice());
                 Picasso.get().load(model.getImage()).into(holder.productImage);
 
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(ProductDetailsActivity.this,ProductDetailsActivity.class);
+                        intent.putExtra("productName", model.getPname());
+                        intent.putExtra("price", model.getPrice());
+                        intent.putExtra("category", model.getCategory());
+                        intent.putExtra("pid", model.getPid());
+                        startActivity(intent);
+
+                    }
+                });
+
             }
 
             @NonNull
@@ -193,21 +298,5 @@ public class ProductDetailsActivity extends AppCompatActivity {
         similarProductsRecyclerView.setLayoutManager(layoutManager);
         similarProductsRecyclerView.setAdapter(adapter);
         adapter.startListening();
-    }
-
-    private void getProductDetails(String pid){
-
-        firestore.collection("Products").document(pid).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                        DocumentSnapshot documentSnapshot = task.getResult();
-
-                        if (task.isSuccessful()){
-                            String description = documentSnapshot.getString("description");
-                        }
-                    }
-                });
     }
 }

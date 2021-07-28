@@ -48,11 +48,11 @@
 
 
             <TextView
-                android:id="@+id/mensFashionHome"
+                android:id="@+id/category0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageSliderCardViewHome"
-                android:text="      Recently Added"
+                android:text="      Category"
                 android:background="#ADB35C10"
                 android:textSize="16sp"
                 android:layout_marginStart="5dp"
@@ -61,10 +61,10 @@
                 android:padding="4dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recentlyAddedRecyclerViewHome"
+                android:id="@+id/category0RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/mensFashionHome"
+                android:layout_below="@+id/category0"
                 android:layout_marginTop="5dp"/>
 
             <TextView
@@ -78,7 +78,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:textColor="@color/white"
-                android:layout_below="@id/recentlyAddedRecyclerViewHome"
+                android:layout_below="@id/category0RecyclerView"
                 android:padding="4dp"/>
 
             <androidx.recyclerview.widget.RecyclerView

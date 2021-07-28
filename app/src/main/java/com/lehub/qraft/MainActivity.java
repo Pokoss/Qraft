@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,15 +50,16 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
     NavigationView navigationView;
-    RecyclerView.LayoutManager layoutManager;
-    RecyclerView.LayoutManager layoutRecentlyAdded, moreItemsLayout;
-    RecyclerView.LayoutManager category1Layout;
-    RecyclerView.LayoutManager category2Layout;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutcategory0, moreItemsLayout;
+    private RecyclerView.LayoutManager category1Layout;
+    private RecyclerView.LayoutManager category2Layout;
 
     private TextView mensFashionHome, goToSearch;
+    private ProgressDialog loadingBar;
 
     private RecyclerView loadCategoriesToRecyclerView,category2Recyclerview;
-    private RecyclerView recentlyAddedRecyclerView, moreItemsHomeRecyclerView, category1Recyclerview;
+    private RecyclerView category0RecyclerView, moreItemsHomeRecyclerView, category1Recyclerview;
 
     private FirebaseFirestore firestore;
 
@@ -70,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sliderViewHome = findViewById(R.id.imageSliderHome);
-
-        mensFashionHome = findViewById(R.id.mensFashionHome);
-
+        mensFashionHome = findViewById(R.id.category0);
         category1Recyclerview = findViewById(R.id.category1Recyclerview);
 
         mensFashionHome.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        loadingBar = new ProgressDialog(this);
+        loadingBar.setTitle("Loading Page");
+        loadingBar.setMessage("Please Wait");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.setCancelable(false);
+        loadingBar.show();
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -109,19 +119,40 @@ public class MainActivity extends AppCompatActivity {
 
                 if (id == R.id.nav_cart){
 
-                    Intent intent = new Intent(MainActivity.this,CartActivity.class);
-                    startActivity(intent);
+                    FirebaseUser user = mAuth.getCurrentUser();
+
+                    if (user == null){
+
+                        CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Please Login to view to enable Cart");
+                        builder.setItems(sequence, (dialog, which) -> {
+
+                            if (which == 0){
+
+                                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                                startActivity(intent);
+                            }
+                            if (which == 1){
+
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.create().show();
+                    }
+                    else {
+                        Intent intent = new Intent(MainActivity.this,CartActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 if (id == R.id.nav_search){
 
                     Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                     startActivity(intent);
-
                 }
                 if (id == R.id.nav_categories){
 
                     Toast.makeText(MainActivity.this, "Categories", Toast.LENGTH_SHORT).show();
-
                 }
                 if (id == R.id.nav_settings){
 
@@ -134,16 +165,48 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-
                 }
 
                 return true;
             }
         });
 
+        FloatingActionButton actionButton = findViewById(R.id.cartFloatingButton);
+        actionButton.setOnClickListener(v -> {
+
+            FirebaseUser user = mAuth.getCurrentUser();
+
+            if (user == null){
+
+                CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Please Login to enable Cart");
+                builder.setItems(sequence, (dialog, which) -> {
+                    
+                    if (which == 0){
+
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                        startActivity(intent);
+
+                    }
+                    if (which == 1){
+
+                        dialog.dismiss();
+
+                    }
+
+                });
+                builder.create().show();
+            }
+            else {
+                Intent intent = new Intent(MainActivity.this,CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         loadCategoriesToRecyclerView = findViewById(R.id.loadCategoriesToRecyclerView);
-        recentlyAddedRecyclerView = findViewById(R.id.recentlyAddedRecyclerViewHome);
+        category0RecyclerView = findViewById(R.id.category0RecyclerView);
         moreItemsHomeRecyclerView = findViewById(R.id.moreItemsHomeRecyclerView);
         category2Recyclerview = findViewById(R.id.category2Recyclerview);
         goToSearch = findViewById(R.id.goToSearch);
@@ -157,17 +220,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        layoutRecentlyAdded = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        moreItemsLayout = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        layoutcategory0 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         category1Layout = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         category2Layout = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        moreItemsLayout = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
 
 
         firestore = FirebaseFirestore.getInstance();
 
         loadCategoriesToRecyclerViews();
-        loadProductsToRecentlyAddedRecyclerView();
+        loadProductsToCategory0RecyclerView();
         loadProductsToRecyclerView();
         loadProductsToCategory1RecyclerView();
         loadProductsToCategory2RecyclerView();
@@ -193,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.productName.setText(model.getPname());
                 holder.productPrice.setText("UGX " + model.getPrice());
                 Picasso.get().load(model.getImage()).into(holder.productImage);
+                loadingBar.dismiss();
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -200,22 +264,22 @@ public class MainActivity extends AppCompatActivity {
 
                         if (user == null){
 
+
+                            CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Please Login to view " + model.getPname());
-                            builder.setPositiveButton("Ok      ", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                            builder.setTitle("Please Login to view "  + model.getPname());
+                            builder.setItems(sequence, (dialog, which) -> {
+
+                                if (which == 0){
 
                                     Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                                     startActivity(intent);
                                 }
-                            });
-                            builder.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                if (which == 1){
 
                                     dialog.dismiss();
                                 }
+
                             });
                             builder.create().show();
 
@@ -226,20 +290,13 @@ public class MainActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(MainActivity.this,ProductDetailsActivity.class);
                             intent.putExtra("productName", model.getPname());
-                            intent.putExtra("image", model.getImage());
-                            intent.putExtra("image1", model.getImage1());
-                            intent.putExtra("image2", model.getImage2());
-                            intent.putExtra("description", model.getDescription());
                             intent.putExtra("price", model.getPrice());
                             intent.putExtra("category", model.getCategory());
                             intent.putExtra("pid", model.getPid());
                             startActivity(intent);
-
                         }
-
                     }
                 });
-
             }
 
             @NonNull
@@ -283,19 +340,17 @@ public class MainActivity extends AppCompatActivity {
 
                             if (user == null){
 
+                                CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                builder.setTitle("Please Login to view " + model.getPname());
-                                builder.setPositiveButton("Ok      ", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                builder.setTitle("Please Login to view "  + model.getPname());
+                                builder.setItems(sequence, (dialog, which) -> {
+
+                                    if (which == 0){
 
                                         Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                                         startActivity(intent);
                                     }
-                                });
-                                builder.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    if (which == 1){
 
                                         dialog.dismiss();
                                     }
@@ -309,19 +364,13 @@ public class MainActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(MainActivity.this,ProductDetailsActivity.class);
                                 intent.putExtra("productName", model.getPname());
-                                intent.putExtra("image", model.getImage());
-                                intent.putExtra("image1", model.getImage1());
-                                intent.putExtra("image2", model.getImage2());
-                                intent.putExtra("description", model.getDescription());
                                 intent.putExtra("price", model.getPrice());
                                 intent.putExtra("category", model.getCategory());
                                 intent.putExtra("pid", model.getPid());
                                 startActivity(intent);
                             }
-
                         }
                     });
-
             }
 
             @NonNull
@@ -331,13 +380,11 @@ public class MainActivity extends AppCompatActivity {
                 ProductViewHolder holder = new ProductViewHolder(view);
                 return holder;
             }
-
         };
 
         category1Recyclerview.setLayoutManager(category1Layout);
         category1Recyclerview.setAdapter(adapter);
         adapter.startListening();
-
     }
 
     private void loadProductsToRecyclerView() {
@@ -367,43 +414,34 @@ public class MainActivity extends AppCompatActivity {
 
                         if (user == null){
 
+                            CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Please Login to view " + model.getPname());
-                            builder.setPositiveButton("Ok      ", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                            builder.setTitle("Please Login to view "  + model.getPname());
+                            builder.setItems(sequence, (dialog, which) -> {
+
+                                if (which == 0){
 
                                     Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                                     startActivity(intent);
                                 }
-                            });
-                            builder.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                if (which == 1){
 
                                     dialog.dismiss();
                                 }
                             });
                             builder.create().show();
-
                         }
                         else{
 
                             Intent intent = new Intent(MainActivity.this,ProductDetailsActivity.class);
                             intent.putExtra("productName", model.getPname());
-                            intent.putExtra("image", model.getImage());
-                            intent.putExtra("image1", model.getImage1());
-                            intent.putExtra("image2", model.getImage2());
-                            intent.putExtra("description", model.getDescription());
                             intent.putExtra("price", model.getPrice());
                             intent.putExtra("category", model.getCategory());
                             intent.putExtra("pid", model.getPid());
                             startActivity(intent);
                         }
-
                     }
                 });
-
             }
 
             @NonNull
@@ -420,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadProductsToRecentlyAddedRecyclerView() {
+    private void loadProductsToCategory0RecyclerView() {
 
         Query query = firestore.collection("Products");
 
@@ -446,41 +484,33 @@ public class MainActivity extends AppCompatActivity {
 
                         if (user == null){
 
+                            CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Please Login to view " + model.getPname());
-                            builder.setPositiveButton("Ok      ", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                            builder.setTitle("Please Login to view "  + model.getPname());
+                            builder.setItems(sequence, (dialog, which) -> {
+
+                                if (which == 0){
 
                                     Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                                     startActivity(intent);
                                 }
-                            });
-                            builder.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                if (which == 1){
 
                                     dialog.dismiss();
                                 }
                             });
                             builder.create().show();
-
                         }
 
                         else {
 
                             Intent intent = new Intent(MainActivity.this,ProductDetailsActivity.class);
                             intent.putExtra("productName", model.getPname());
-                            intent.putExtra("image", model.getImage());
-                            intent.putExtra("image1", model.getImage1());
-                            intent.putExtra("image2", model.getImage2());
-                            intent.putExtra("description", model.getDescription());
                             intent.putExtra("price", model.getPrice());
                             intent.putExtra("category", model.getCategory());
                             intent.putExtra("pid", model.getPid());
                             startActivity(intent);
                         }
-
                     }
                 });
 
@@ -494,8 +524,8 @@ public class MainActivity extends AppCompatActivity {
                 return holder;
             }
         };
-        recentlyAddedRecyclerView.setLayoutManager(layoutRecentlyAdded);
-        recentlyAddedRecyclerView.setAdapter(adapter);
+        category0RecyclerView.setLayoutManager(layoutcategory0);
+        category0RecyclerView.setAdapter(adapter);
         adapter.startListening();
     }
 
@@ -514,6 +544,17 @@ public class MainActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull Catergory1ViewHolder holder, int position, @NonNull Category1 model) {
 
                 holder.textViewCategory1.setText(model.getCname());
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(MainActivity.this, DisplayCategoryActivity.class);
+                        intent.putExtra("category", model.getCname());
+                        startActivity(intent);
+
+                    }
+                });
             }
 
             @NonNull
@@ -529,33 +570,4 @@ public class MainActivity extends AppCompatActivity {
         loadCategoriesToRecyclerView.setAdapter(adapter);
         adapter.startListening();
     }
-
-   /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null){
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Login for a full experience");
-            builder.setPositiveButton("Ok      ", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    dialog.dismiss();
-                }
-            });
-            builder.create().show();
-        }
-    }*/ //onStart comment
 }

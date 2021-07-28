@@ -28,6 +28,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+
 public class LoginActivity extends AppCompatActivity {
 
     private AppCompatButton loginButton, signInWithGoogle, createAccountButton;
@@ -154,21 +156,31 @@ public class LoginActivity extends AppCompatActivity {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
 
-                            FirebaseUser user = mAuth.getCurrentUser();
+                        String uid = mAuth.getCurrentUser().getUid();
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        } else {
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("name", mAuth.getCurrentUser().getDisplayName());
+                        hashMap.put("email", mAuth.getCurrentUser().getEmail());
+                        hashMap.put("uid", uid);
 
-                            Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                        }
+                        firebaseFirestore.collection("Users").document(uid).set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+
+
+                    } else {
+
+                        Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
+
                 });
     }
 

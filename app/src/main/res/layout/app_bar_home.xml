@@ -41,7 +41,7 @@
                         android:backgroundTint="@color/white"
                         android:text="  Search Product.."
                         android:drawableStart="@drawable/search_icon"
-                        android:drawableTint="@color/black"
+                        app:drawableTint="@color/black"
                         android:paddingStart="10dp"
                         android:layout_alignParentStart="true"
                         android:layout_toStartOf="@id/logoAppBarHome"
@@ -90,6 +90,7 @@
     <include layout="@layout/content_home" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cartFloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"

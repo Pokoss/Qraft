@@ -3,8 +3,6 @@ package com.lehub.qraft;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -26,59 +25,45 @@ import com.squareup.picasso.Picasso;
 import Model.Product;
 import ViewHolder.ProductViewHolder;
 
-public class SearchActivity extends AppCompatActivity {
+public class DisplayCategoryActivity extends AppCompatActivity {
 
-    private AppCompatButton searchProductButton;
-    private AppCompatEditText getSearchInput;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView displayCategoryProductToRecyclerView;
     private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
-    private String search = "";
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView searchRecyclerView;
+    private TextView appBarCategoryText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-
-        searchProductButton = findViewById(R.id.searchInputButton);
-        getSearchInput = findViewById(R.id.searchInputEditText);
+        setContentView(R.layout.activity_display_category);
 
         firestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        searchRecyclerView = findViewById(R.id.recyclerViewSearch);
+
+        String category = getIntent().getStringExtra("category").toString();
+
+
+        appBarCategoryText = findViewById(R.id.appBarCategoryText);
+        displayCategoryProductToRecyclerView = findViewById(R.id.displayCategoryProductToRecyclerView);
+
+        appBarCategoryText.setText(category);
 
         layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
-        searchForProduct(search);
+        displayCategory(category);
 
-        searchProductButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String searchText = getSearchInput.getText().toString();
-
-                if (searchText.isEmpty()){
-
-                    getSearchInput.setError("Type a product you want to find");
-                }
-                else {
-
-                    searchForProduct(searchText);
-                }
-
-            }
-
-
-        });
     }
 
-    private void searchForProduct(String searchText) {
+    private void displayCategory(String category) {
+
+        firestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query.orderBy("pname").startAt(searchText), Product.class)
+                .setQuery(query.whereEqualTo("category",category), Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -101,13 +86,13 @@ public class SearchActivity extends AppCompatActivity {
                         if (user == null){
 
                             CharSequence[] sequence = new CharSequence[]{"Login", "Not Now"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayCategoryActivity.this);
                             builder.setTitle("Please Login to view "  + model.getPname());
                             builder.setItems(sequence, (dialog, which) -> {
 
                                 if (which == 0){
 
-                                    Intent intent = new Intent(SearchActivity.this,LoginActivity.class);
+                                    Intent intent = new Intent(DisplayCategoryActivity.this,LoginActivity.class);
                                     startActivity(intent);
                                 }
                                 if (which == 1){
@@ -119,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
                         }
                         else{
 
-                            Intent intent = new Intent(SearchActivity.this,ProductDetailsActivity.class);
+                            Intent intent = new Intent(DisplayCategoryActivity.this,ProductDetailsActivity.class);
                             intent.putExtra("productName", model.getPname());
                             intent.putExtra("price", model.getPrice());
                             intent.putExtra("category", model.getCategory());
@@ -138,8 +123,8 @@ public class SearchActivity extends AppCompatActivity {
                 return holder;
             }
         };
-        searchRecyclerView.setLayoutManager(layoutManager);
-        searchRecyclerView.setAdapter(adapter);
+        displayCategoryProductToRecyclerView.setLayoutManager(layoutManager);
+        displayCategoryProductToRecyclerView.setAdapter(adapter);
         adapter.startListening();
     }
 }

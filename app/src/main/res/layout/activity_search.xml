@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,21 +9,54 @@
     android:background="@color/white">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarSearch"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:background="@color/purple_500">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
-            <androidx.appcompat.widget.SearchView
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/searchInputEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:queryHint="Search"
+                android:layout_height="match_parent"
                 android:background="@drawable/input"
-                android:layout_margin="10dp"/>
+                android:backgroundTint="@color/white"
+                android:layout_margin="10dp"
+                android:drawableStart="@drawable/search_icon"
+                app:drawableTint="@color/black"
+                android:layout_centerVertical="true"
+                android:hint="  Search.."
+                android:maxLines="1"
+                android:maxLength="15"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                android:layout_toStartOf="@+id/searchInputButton"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/searchInputButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:text="Search"
+                android:textAllCaps="false"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/buttons"
+                android:textColor="@color/white"/>
+
 
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appBarSearch"
+        />
 
 </RelativeLayout>
