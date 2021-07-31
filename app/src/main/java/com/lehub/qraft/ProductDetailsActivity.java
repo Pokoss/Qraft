@@ -179,11 +179,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private void checkOrderState() {
 
+        firestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         String user = mAuth.getCurrentUser().getUid();
 
-        DocumentReference documentReference = firestore.collection("Orders").document(user);
-
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firestore.collection("Orders").document(user)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -195,13 +197,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                        Toast.makeText(ProductDetailsActivity.this, "You have pending orders, please wait for it to be approved", Toast.LENGTH_SHORT).show();
                        loadingBar.dismiss();
+                   }else{
+
+                       addToCart();
                    }
 
-
-               }
-               else {
-
-                   addToCart();
                }
 
             }

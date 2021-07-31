@@ -77,33 +77,55 @@ public class CartActivity extends AppCompatActivity {
                                 orderIsPendingText.setVisibility(View.VISIBLE);
                                 loadingBar.dismiss();
                             }
+                            else{
+
+                                firestore.collection("Cart List").document("User View").collection(user)
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                        if (task.isSuccessful()){
+
+                                            QuerySnapshot snapshot = task.getResult();
+
+                                            if (snapshot.isEmpty()){
+
+                                                cartIsEmptyText.setVisibility(View.VISIBLE);
+                                                goToConfirmOrder.setVisibility(View.GONE);
+                                                loadingBar.dismiss();
+
+                                            }
+                                            else {
+                                                goToConfirmOrder.setVisibility(View.VISIBLE);
+                                                layoutManager = new LinearLayoutManager(CartActivity.this,LinearLayoutManager.VERTICAL,false);
+                                                loadCartItemsToRecyclerView();
+                                            }
+
+
+                                        }
+                                        else {
+
+                                            Toast.makeText(CartActivity.this, "something is wrong 1", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                });
+
+                            }
                         }
                         else {
 
-                            firestore.collection("Cart List").document("User View").collection(user)
-                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    QuerySnapshot snapshots = task.getResult();
-                                    if (snapshots.isEmpty()){
+                            Toast.makeText(CartActivity.this, "Something is wrong", Toast.LENGTH_SHORT).show();
 
-                                        cartIsEmptyText.setVisibility(View.VISIBLE);
-                                        goToConfirmOrder.setVisibility(View.GONE);
-                                        loadingBar.dismiss();
-                                    }
-                                    else {
-
-                                        Toast.makeText(CartActivity.this, "I made it this far", Toast.LENGTH_SHORT).show();
-                                        goToConfirmOrder.setVisibility(View.VISIBLE);
-                                        layoutManager = new LinearLayoutManager(CartActivity.this,LinearLayoutManager.VERTICAL,false);
-                                        loadCartItemsToRecyclerView();
-                                    }
-                                }
-                            });
                         }
                     }
 
                     private void loadCartItemsToRecyclerView() {
+
+                        firestore = FirebaseFirestore.getInstance();
+                        mAuth = FirebaseAuth.getInstance();
+
+                        String user = mAuth.getCurrentUser().getUid();
 
                         Query query = firestore.collection("Cart List").document("User View").collection(user);
 

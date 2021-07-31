@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -85,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        firestore = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        firestore.setFirestoreSettings(settings);
 
         loadingBar = new ProgressDialog(this);
         loadingBar.setTitle("Loading Page");
@@ -226,8 +234,6 @@ public class MainActivity extends AppCompatActivity {
         moreItemsLayout = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
 
-
-        firestore = FirebaseFirestore.getInstance();
 
         loadCategoriesToRecyclerViews();
         loadProductsToCategory0RecyclerView();
