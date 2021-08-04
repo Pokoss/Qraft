@@ -41,7 +41,7 @@ import ViewHolder.ProductViewHolder;
 public class ProductDetailsActivity extends AppCompatActivity {
 
     private TextView productDetailsName,productDetailsPrice,productDetailsDescription;
-    private ImageView productDetailsImage, productDetailsImage1, productDetailsImage2;
+    private ImageView productDetailsImage;
     private Button productDetailsAddToCart, productDetailsGoToCart;
     private ElegantNumberButton productDetailsQuantity;
     private RecyclerView similarProductsRecyclerView;
@@ -53,7 +53,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     private FirebaseFirestore firestore;
 
-    private String pid = "",productName = "", image = "", image1 = "", image2 = "",description = "",price = "", category = "";
+    private String pid = "",productName = "", image = "",description = "",price = "", category = "";
 
 
     @Override
@@ -70,8 +70,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productDetailsPrice = findViewById(R.id.productDetailsPrice);
         productDetailsDescription = findViewById(R.id.productDetailsDescription);
         productDetailsImage = findViewById(R.id.productDetailsImage);
-        productDetailsImage1 = findViewById(R.id.productDetailsImage1);
-        productDetailsImage2 = findViewById(R.id.productDetailsImage2);
         productDetailsAddToCart = findViewById(R.id.productDetailsAddToCart);
         productDetailsGoToCart = findViewById(R.id.productDetailsGoToCart);
         productDetailsQuantity = findViewById(R.id.productDetailsQuantity);
@@ -141,13 +139,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                         productDetailsDescription.setText(theDescription);
                         Picasso.get().load(theImage).into(productDetailsImage);
-                        Picasso.get().load(theImage1).into(productDetailsImage1);
-                        Picasso.get().load(theImage2).into(productDetailsImage2);
 
                         description = theDescription;
                         image = theImage;
-                        image1 = theImage1;
-                        image2 = theImage2;
 
                         loadingBar.dismiss();
 
