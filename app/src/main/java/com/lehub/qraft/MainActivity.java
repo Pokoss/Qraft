@@ -160,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (id == R.id.nav_categories){
 
-                    Toast.makeText(MainActivity.this, "Categories", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this,ShowCategoriesActivity.class);
+                    startActivity(intent);
                 }
                 if (id == R.id.nav_settings){
 

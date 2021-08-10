@@ -50,37 +50,11 @@
                 android:textSize="28sp"
                 android:text="Price"
                 android:visibility="gone"
+                android:textStyle="bold"
                 android:layout_below="@+id/cartRecyclerView"
                 android:layout_marginTop="15sp"
                 android:layout_centerHorizontal="true"
                 android:textColor="@android:color/holo_red_light"/>
-
-            <TextView
-                android:id="@+id/cartIsEmptyText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="Hmm, It appears your cart is empty or check your internet connection"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/orderIsPendingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="You still have a pending order, Please wait for it to be confirmed"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:visibility="gone"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/goToConfirmOrder"
@@ -97,6 +71,34 @@
 
         </RelativeLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/orderIsPendingText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="You still have a pending order, Please wait for it to be confirmed"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        />
+
+    <TextView
+        android:id="@+id/cartIsEmptyText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Hmm, It appears your cart is empty or check your internet connection"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

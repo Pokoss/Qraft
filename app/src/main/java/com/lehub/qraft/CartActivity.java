@@ -35,11 +35,13 @@ public class CartActivity extends AppCompatActivity {
 
     private RecyclerView cartRecyclerView;
     private AppCompatButton goToConfirmOrder;
-    private TextView cartIsEmptyText, orderIsPendingText;
+    private TextView cartIsEmptyText, orderIsPendingText, cartTotalPrice;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
     private RecyclerView.LayoutManager layoutManager;
     private ProgressDialog loadingBar;
+    private float totalPrice = 0, priceOfOneProduct;
+    private String s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class CartActivity extends AppCompatActivity {
         goToConfirmOrder = findViewById(R.id.goToConfirmOrder);
         cartIsEmptyText = findViewById(R.id.cartIsEmptyText);
         orderIsPendingText = findViewById(R.id.orderIsPendingText);
+        cartTotalPrice = findViewById(R.id.cartTotalPrice);
 
         loadingBar = new ProgressDialog(this);
         loadingBar.setTitle("Loading Cart Items");
@@ -71,6 +74,8 @@ public class CartActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
 
                             DocumentSnapshot snapshot = task.getResult();
+
+                            //String state = snapshot.getString("state");
 
                             if (snapshot.exists()) {
                                 cartIsEmptyText.setVisibility(View.GONE);
@@ -146,6 +151,12 @@ public class CartActivity extends AppCompatActivity {
                                 holder.productTotalCart.setText( "Total:  UGX " + String.valueOf(total));
                                 Picasso.get().load(model.getImage()).into(holder.cartImage);
 
+                                priceOfOneProduct = ((Float.valueOf(model.getPrice()))) * Float.valueOf(model.getQuantity());
+                                totalPrice = totalPrice + priceOfOneProduct;
+                                cartTotalPrice.setVisibility(View.VISIBLE);
+                                s = String.valueOf(totalPrice);
+                                cartTotalPrice.setText("Total: UGX " + s);
+
                                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -214,5 +225,11 @@ public class CartActivity extends AppCompatActivity {
                         loadingBar.dismiss();
                     }
                 });
+
+        goToConfirmOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(CartActivity.this,ConfirmOrderActivity.class);
+            intent.putExtra("Total Price", s);
+            startActivity(intent);
+        });
     }
 }

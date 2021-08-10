@@ -7,4 +7,161 @@
     android:layout_height="match_parent"
     tools:context=".ConfirmOrderActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/AppBarConfirmOrder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:elevation="15dp"
+        android:background="@color/purple_500"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery Details"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AppBarConfirmOrder">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true">
+
+            <TextView
+                android:id="@+id/nameConfirmOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="50dp"
+                android:layout_marginStart="13dp"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/nameConfirmOrderEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameConfirmOrder"
+                android:background="@drawable/input"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Type receiver's name"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/numberConfirmOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameConfirmOrderEditText"
+                android:text="Phone Number"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="13dp"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/numberConfirmOrderEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/numberConfirmOrder"
+                android:background="@drawable/input"
+                android:padding="10dp"
+                android:inputType="number"
+                android:maxLength="10"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Type receiver's Phone Number eg 075.."
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/districtConfirmOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/numberConfirmOrderEditText"
+                android:text="District"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="13dp"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/districtConfirmOrderEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/districtConfirmOrder"
+                android:background="@drawable/input"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Type your District e.g Kampala"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/addressConfirmOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/districtConfirmOrderEditText"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="13dp"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/addressConfirmOrderEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addressConfirmOrder"
+                android:background="@drawable/input"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Type your Address e.g Seeta opposite shell Kob road"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/priceConfirmOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="28sp"
+                android:text="Price"
+                android:textStyle="bold"
+                android:layout_below="@+id/addressConfirmOrderEditText"
+                android:layout_marginTop="15sp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@android:color/holo_red_light"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/confirmFinalOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Confirm Order"
+                android:textAllCaps="false"
+                android:layout_below="@+id/priceConfirmOrder"
+                android:background="@drawable/buttons"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
 </RelativeLayout>

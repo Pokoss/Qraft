@@ -46,67 +46,129 @@
 
             </androidx.cardview.widget.CardView>
 
-
-            <TextView
-                android:id="@+id/category0"
+            <RelativeLayout
+                android:id="@+id/supplier1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageSliderCardViewHome"
-                android:text="      Category"
-                android:background="#ADB35C10"
-                android:textSize="16sp"
+                android:layout_below="@id/imageSliderCardViewHome"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:textColor="@color/white"
-                android:padding="4dp"/>
+                android:background="#ADB35C10">
+
+                <TextView
+                    android:id="@+id/category0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="      Supplier 1"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/showMoreFromSupplier1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show more >>"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:padding="4dp"/>
+
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/category0RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/category0"
+                android:layout_below="@+id/supplier1"
                 android:layout_marginTop="5dp"/>
 
-            <TextView
-                android:id="@+id/category1TextView"
+
+
+            <RelativeLayout
+                android:id="@+id/supplier2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="      Category 1"
-                android:background="#AB870557"
-                android:layout_marginTop="8dp"
-                android:textSize="16sp"
+                android:layout_below="@id/category0RecyclerView"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:textColor="@color/white"
-                android:layout_below="@id/category0RecyclerView"
-                android:padding="4dp"/>
+                android:layout_marginTop="8dp"
+                android:background="#AB870557">
+
+                <TextView
+                    android:id="@+id/category1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="      Supplier 2"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/showMoreFromSupplier2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show more >>"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:padding="4dp"/>
+
+            </RelativeLayout>
+
+
+
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/category1Recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/category1TextView"
+                android:layout_below="@+id/supplier2"
                 android:layout_marginTop="5dp"/>
 
-            <TextView
-                android:id="@+id/category2TextView"
+
+
+            <RelativeLayout
+                android:id="@+id/supplier3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="      Category 2"
-                android:background="#B91F074C"
-                android:layout_marginTop="8dp"
-                android:textSize="16sp"
+                android:layout_below="@id/category1Recyclerview"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:textColor="@color/white"
-                android:layout_below="@id/category1Recyclerview"
-                android:padding="4dp"/>
+                android:layout_marginTop="8dp"
+                android:background="#B91F074C">
+
+                <TextView
+                    android:id="@+id/category2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="      supplier 3"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/showMoreFromSupplier3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show more >>"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:padding="4dp"/>
+
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/category2Recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/category2TextView"
+                android:layout_below="@+id/supplier3"
                 android:layout_marginTop="5dp"/>
 
             <TextView
