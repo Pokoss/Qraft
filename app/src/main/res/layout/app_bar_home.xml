@@ -58,9 +58,10 @@
                         android:id="@+id/logoAppBarHome"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:background="@drawable/icon"
+                        android:src="@drawable/person"
                         android:layout_margin="5dp"
                         android:layout_centerVertical="true"
+                        app:civ_circle_background_color="#ADB35C10"
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentEnd="true"/>
 

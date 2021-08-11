@@ -82,6 +82,14 @@ public class Product {
         this.category = category;
     }
 
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
     String pname;
     String price;
     String time;
@@ -92,8 +100,9 @@ public class Product {
     String description;
     String date;
     String category;
+    String supplier;
 
-    public Product(String pname, String price, String time, String pid, String image, String image1, String image2, String description, String date, String category) {
+    public Product(String pname, String price, String time, String pid, String image, String image1, String image2, String description, String date, String category,String supplier) {
         this.pname = pname;
         this.price = price;
         this.time = time;
@@ -104,6 +113,7 @@ public class Product {
         this.description = description;
         this.date = date;
         this.category = category;
+        this.supplier = supplier;
     }
 
     public Product(){

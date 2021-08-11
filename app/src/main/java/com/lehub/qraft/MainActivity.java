@@ -29,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
@@ -51,12 +52,16 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
     NavigationView navigationView;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.LayoutManager layoutcategory0, moreItemsLayout;
-    private RecyclerView.LayoutManager category1Layout;
-    private RecyclerView.LayoutManager category2Layout;
+    private LinearLayoutManager layoutManager;
+    private LinearLayoutManager layoutcategory0, moreItemsLayout;
+    private LinearLayoutManager category1Layout;
+    private LinearLayoutManager category2Layout;
 
-    private TextView mensFashionHome, goToSearch;
+    private TextView supplier1TextView, showMoreFromSupplier1,supplier2TextView,showMoreFromSupplier2,
+            supplier3TextView,showMoreFromSupplier3,goToSearch;
+
+    private String sponsor1, sponsor2, sponsor3, queryField;
+
     private ProgressDialog loadingBar;
 
     private RecyclerView loadCategoriesToRecyclerView,category2Recyclerview;
@@ -76,16 +81,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sliderViewHome = findViewById(R.id.imageSliderHome);
-        mensFashionHome = findViewById(R.id.category0);
+        supplier1TextView = findViewById(R.id.supplier1TextView);
         category1Recyclerview = findViewById(R.id.category1Recyclerview);
-
-        mensFashionHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent);
-            }
-        });
 
         firestore = FirebaseFirestore.getInstance();
 
@@ -98,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         loadingBar.setTitle("Loading Page");
         loadingBar.setMessage("Please Wait");
         loadingBar.setCanceledOnTouchOutside(false);
-        loadingBar.setCancelable(false);
         loadingBar.show();
 
 
@@ -220,6 +216,70 @@ public class MainActivity extends AppCompatActivity {
         category2Recyclerview = findViewById(R.id.category2Recyclerview);
         goToSearch = findViewById(R.id.goToSearch);
 
+        supplier1TextView = (TextView) findViewById(R.id.supplier1TextView);
+        showMoreFromSupplier1 = (TextView) findViewById(R.id.showMoreFromSupplier1);
+        supplier2TextView = (TextView) findViewById(R.id.supplier2TextView);
+        showMoreFromSupplier2 = (TextView) findViewById(R.id.showMoreFromSupplier2);
+        supplier3TextView = (TextView) findViewById(R.id.supplier3TextView);
+        showMoreFromSupplier3 = (TextView) findViewById(R.id.showMoreFromSupplier3);
+
+
+        firestore.collection("Sponsors").document("sponsor").get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+
+                        if (task.isSuccessful()){
+
+                            DocumentSnapshot snapshot = task.getResult();
+
+                            sponsor1 = snapshot.getString("sponsor1");
+                            sponsor2 = snapshot.getString("sponsor2");
+                            sponsor3 = snapshot.getString("sponsor3");
+                            queryField = snapshot.getString("sortBy");
+
+                            supplier1TextView.setText("Qrafts by " + sponsor1);
+                            supplier2TextView.setText("Qrafts by " + sponsor2);
+                            supplier3TextView.setText("Qrafts by " + sponsor3);
+
+                            loadProductsToCategory2RecyclerView();
+                            loadCategoriesToRecyclerViews();
+                            loadProductsToCategory0RecyclerView();
+                            loadProductsToRecyclerView();
+                            loadProductsToCategory1RecyclerView();
+
+
+                        }
+                    }
+                });
+
+
+        showMoreFromSupplier1.setOnClickListener(v -> {
+
+            Intent intent = new Intent(MainActivity.this, SupplierProductsActivity.class);
+            intent.putExtra("sponsor", sponsor1);
+            intent.putExtra("sortBy", queryField);
+            startActivity(intent);
+        });
+
+        showMoreFromSupplier2.setOnClickListener(v -> {
+
+            Intent intent = new Intent(MainActivity.this, SupplierProductsActivity.class);
+            intent.putExtra("sponsor", sponsor2);
+            intent.putExtra("sortBy", queryField);
+            startActivity(intent);
+        });
+
+        showMoreFromSupplier3.setOnClickListener(v -> {
+
+            Intent intent = new Intent(MainActivity.this, SupplierProductsActivity.class);
+            intent.putExtra("sponsor", sponsor3);
+            intent.putExtra("sortBy", queryField);
+            startActivity(intent);
+        });
+
+
         goToSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,28 +288,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        layoutcategory0 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        category1Layout = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        category2Layout = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        moreItemsLayout = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,true);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
 
+        layoutcategory0 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,true);
+        layoutcategory0.setReverseLayout(true);
+        layoutcategory0.setStackFromEnd(true);
 
+        category1Layout = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,true);
+        category1Layout.setReverseLayout(true);
+        category1Layout.setStackFromEnd(true);
 
-        loadCategoriesToRecyclerViews();
-        loadProductsToCategory0RecyclerView();
-        loadProductsToRecyclerView();
-        loadProductsToCategory1RecyclerView();
-        loadProductsToCategory2RecyclerView();
+        category2Layout = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,true);
+        category2Layout.setReverseLayout(true);
+        category2Layout.setStackFromEnd(true);
+
+        moreItemsLayout = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true);
+        moreItemsLayout.setReverseLayout(true);
+        moreItemsLayout.setStackFromEnd(true);
+
 
     }
 
+    //Third recyclerView
     private void loadProductsToCategory2RecyclerView() {
+
 
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query,Product.class)
+                .setQuery(query.whereEqualTo(queryField,sponsor3).limit(8),Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -321,12 +390,13 @@ public class MainActivity extends AppCompatActivity {
         adapter.startListening();
     }
 
+    //second recyclerView
     private void loadProductsToCategory1RecyclerView() {
 
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query,Product.class)
+                .setQuery(query.whereEqualTo(queryField,sponsor2).limit(8),Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -394,12 +464,14 @@ public class MainActivity extends AppCompatActivity {
         adapter.startListening();
     }
 
+    //more Products RecyclerView
     private void loadProductsToRecyclerView() {
+
 
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query, Product.class)
+                .setQuery(query.orderBy("date"), Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -465,12 +537,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //first recyclerView
     private void loadProductsToCategory0RecyclerView() {
 
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query, Product.class)
+                .setQuery(query.whereEqualTo(queryField,sponsor1).limit(8), Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;

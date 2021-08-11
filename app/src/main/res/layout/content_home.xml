@@ -56,11 +56,12 @@
                 android:background="#ADB35C10">
 
                 <TextView
-                    android:id="@+id/category0"
+                    android:id="@+id/supplier1TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="      Supplier 1"
+                    android:text="Supplier 1"
                     android:textSize="16sp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/white"
                     android:padding="4dp"/>
 
@@ -97,11 +98,12 @@
                 android:background="#AB870557">
 
                 <TextView
-                    android:id="@+id/category1TextView"
+                    android:id="@+id/supplier2TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="      Supplier 2"
+                    android:text="Supplier 2"
                     android:textSize="16sp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/white"
                     android:padding="4dp"/>
 
@@ -143,11 +145,12 @@
                 android:background="#B91F074C">
 
                 <TextView
-                    android:id="@+id/category2TextView"
+                    android:id="@+id/supplier3TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="      supplier 3"
+                    android:text="supplier 3"
                     android:textSize="16sp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/white"
                     android:padding="4dp"/>
 
@@ -175,7 +178,7 @@
                 android:id="@+id/MoreItemsHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="      More Items"
+                android:text="     More Items"
                 android:background="#C3165959"
                 android:layout_marginTop="8dp"
                 android:textSize="16sp"
