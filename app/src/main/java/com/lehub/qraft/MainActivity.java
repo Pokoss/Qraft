@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query.whereEqualTo(queryField,sponsor3).limit(8),Product.class)
+                .setQuery(query.whereEqualTo(queryField,sponsor3).limit(5),Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -396,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query.whereEqualTo(queryField,sponsor2).limit(8),Product.class)
+                .setQuery(query.whereEqualTo(queryField,sponsor2).limit(5),Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query.orderBy("date"), Product.class)
+                .setQuery(query.orderBy("date").limitToLast(18), Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
         Query query = firestore.collection("Products");
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query.whereEqualTo(queryField,sponsor1).limit(8), Product.class)
+                .setQuery(query.whereEqualTo(queryField,sponsor1).limit(5), Product.class)
                 .build();
 
         FirestoreRecyclerAdapter<Product, ProductViewHolder> adapter;
